@@ -1,4 +1,5 @@
 const HttpError = require("../models/httpError");
+const { validationResult } = require("express-validator");
 
 let TEMP_PRODUCT = [
   {
@@ -24,12 +25,19 @@ const getProductById = (req, res, next) => {
   res.json({ product });
 };
 
-const creatProduct = (req, res, next) => {
+const createProduct = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
   const { name, description, price } = req.body;
   const createdProduct = {
     name,
     description,
     price,
+    image,
   };
   TEMP_PRODUCT.push(createdProduct);
 
@@ -37,7 +45,7 @@ const creatProduct = (req, res, next) => {
 };
 
 const updateProduct = (req, res, next) => {
-  const { name, description, price } = req.body;
+  const { name, description, price, image } = req.body;
   const productId = req.params.pid;
 
   const updatedProduct = { ...TEMP_PRODUCT.find((p) => p.id === productId) };
@@ -45,6 +53,7 @@ const updateProduct = (req, res, next) => {
   updatedProduct.name = name;
   updatedProduct.description = description;
   updatedProduct.price = price;
+  updatedProduct.image = image;
 
   TEMP_PRODUCT[productIndex] = updatedProduct;
 
@@ -58,6 +67,6 @@ const deleteProduct = (req, res, next) => {
 };
 
 exports.getProductById = getProductById();
-exports.creatProduct = creatProduct();
+exports.createProduct = createProduct();
 exports.updateProduct = updateProduct();
 exports.deleteProduct = deleteProduct();
