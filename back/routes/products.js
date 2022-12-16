@@ -1,21 +1,13 @@
 const express = require("express");
+const productsController = require("../controllers/productsController");
 
 const router = express.Router();
 
-const TEMP_PRODUCT = [
-  {
-    id: "p1",
-    title: "snickers",
-    price: "1$",
-  },
-];
+router.get("/:pid", productsController.getProductById);
+router.post("/", productsController.creatProduct);
 
-router.get("/:pid", (req, res, next) => {
-  const productId = req.params.pid;
-  const product = TEMP_PRODUCT.find((p) => {
-    return p.id === productId;
-  });
-  res.json({ product });
-});
+router.patch("/:pid", productsController.updateProduct);
+
+router.delete("/:pid", productsController.deleteProduct);
 
 module.exports = router;
