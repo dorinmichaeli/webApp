@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
 const productsRouters = require("./routes/products");
 const usersRouters = require("./routes/users");
 const HttpError = require("./models/httpError");
@@ -22,4 +24,14 @@ server.use((error, req, res, next) => {
   res.status(error.code || 500);
   res.json({ message: error.message || "An unknown error occurred" });
 });
-server.listen(5000); // start Node + Express server on port 5000
+
+mongoose
+  .connect(
+    "mongodb+srv://db:QAZwsx13579@cluster0.cejtut0.mongodb.net/products?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    server.listen(5000, () => console.log("connected to db"));
+  })
+  .catch((err) => {
+    console.log(err);
+  });
