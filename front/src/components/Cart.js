@@ -32,7 +32,7 @@ export default function Cart(props) {
           <>
             <hr></hr>
             <div className="row">
-              <div className="col-2">Items Price</div>
+              <div className="col-2">Items Price:</div>
               <div className="col-1 text-right">${itemsPrice.toFixed(2)}</div>
             </div>
             <div className="row">
