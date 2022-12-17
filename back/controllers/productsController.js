@@ -8,9 +8,7 @@ const getAllProducts = async (req, res, next) => {
     products = await Product.find({}, "name description price image");
     console.log(products);
   } catch (err) {
-    return next(
-      new HttpError("Fetching users failed, please try again later.", 500)
-    );
+    return next(new HttpError("Fetching users failed", 500));
   }
   res.json({
     products: products.map((product) => product.toObject({ getters: true })),
@@ -38,9 +36,9 @@ const getProductById = async (req, res, next) => {
 const createProduct = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return next(new HttpError("Invalid inputs, please check your data.", 422));
+    return next(new HttpError("Invalid input.", 422));
   }
-  const { name, description, price } = req.body;
+  const { name, description, price, image } = req.body;
 
   const createdProduct = new Product({
     name,
@@ -51,7 +49,7 @@ const createProduct = async (req, res, next) => {
   try {
     await createdProduct.save();
   } catch (err) {
-    const error = new HttpError("Failed creating place, please try again", 500);
+    const error = new HttpError("Failed creating product", 500);
     return next(error);
   }
 

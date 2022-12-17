@@ -1,4 +1,4 @@
-.authentication__header {
+/* .authentication__header {
     color: white;
     text-align: center;
   }
@@ -12,4 +12,19 @@
   
   .authentication form {
     margin-bottom: 1rem;
+  } */
+  * {
+    text-align: center;
+    background-color: whitesmoke;
   }
+  
+  h1 {
+    font-family: system-ui, -apple-system, sans-serif;
+    color: black;
+    padding: 0.5px;
+    text-align: center;
+    font-size: xx-large;
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  

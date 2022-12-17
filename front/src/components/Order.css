@@ -1,0 +1,55 @@
+.form {
+  margin: auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: whitesmoke;
+}
+
+.control {
+  margin-bottom: 0.5rem;
+  background-color: whitesmoke;
+}
+
+.control label {
+  display: block;
+  font-size: larger;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  text-transform: uppercase;
+  text-shadow: none;
+  letter-spacing: 2px;
+}
+
+.control input,
+.control textarea {
+  display: block;
+  font: inherit;
+  border-radius: 5px;
+  border: 3px solid black;
+  padding: 0.2rem;
+  width: 100%;
+  background-color: whitesmoke;
+}
+
+.actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.actions button {
+  font-size: x-large;
+  cursor: pointer;
+  background-color: rgb(190, 190, 190);
+  color: black;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 0.25rem;
+  margin-left: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.actions button:hover,
+.actions button:active {
+  background-color: whitesmoke;
+  border-color: black;
+}

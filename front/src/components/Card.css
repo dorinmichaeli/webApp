@@ -1,9 +1,12 @@
 .card {
-  position: relative;
-  margin: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  border-radius: 6px;
-  padding: 1rem;
-  overflow: hidden;
-  background: white;
+  display: grid;
+  width: 50%;
+  border: 5px solid black;
+  padding: 5px;
+  margin: auto;
+  margin-top: 30px;
+  text-align: left;
+  background-color: whitesmoke;
+  font-family: system-ui, -apple-system, sans-serif;
+  border-radius: 15px;
 }
