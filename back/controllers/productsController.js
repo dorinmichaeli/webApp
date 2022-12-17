@@ -6,9 +6,10 @@ const getAllProducts = async (req, res, next) => {
   let products;
   try {
     products = await Product.find({}, "name description price image");
+    console.log(products);
   } catch (err) {
     return next(
-      new HttpError("Fatching users failed, please try again later.", 500)
+      new HttpError("Fetching users failed, please try again later.", 500)
     );
   }
   res.json({
@@ -104,8 +105,8 @@ const deleteProductById = async (req, res, next) => {
   res.status(200).json({ message: "Deleted product." });
 };
 
-exports.getAllProducts = getAllProducts();
-exports.getProductById = getProductById();
-exports.createProduct = createProduct();
-exports.updateProductById = updateProductById();
-exports.deleteProductById = deleteProductById();
+exports.getAllProducts = getAllProducts;
+exports.getProductById = getProductById;
+exports.createProduct = createProduct;
+exports.updateProductById = updateProductById;
+exports.deleteProductById = deleteProductById;
