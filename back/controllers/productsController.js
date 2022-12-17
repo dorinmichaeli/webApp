@@ -1,72 +1,111 @@
 const HttpError = require("../models/httpError");
 const { validationResult } = require("express-validator");
+const Product = require("../models/product");
 
-let TEMP_PRODUCT = [
-  {
-    id: "p1",
-    name: "snickers",
-    description: "chocolate",
-    price: "1$",
-  },
-];
-
-const getProductById = (req, res, next) => {
-  const productId = req.params.pid;
-
-  const product = TEMP_PRODUCT.find((p) => {
-    return p.id === productId;
-  });
-
-  if (!product) {
+const getAllProducts = async (req, res, next) => {
+  let products;
+  try {
+    products = await Product.find({}, "name description price image");
+  } catch (err) {
     return next(
-      new HttpError("Could not find a product for the provided id.", 404)
+      new HttpError("Fatching users failed, please try again later.", 500)
     );
   }
-  res.json({ product });
+  res.json({
+    products: products.map((product) => product.toObject({ getters: true })),
+  });
 };
 
-const createProduct = (req, res, next) => {
+const getProductById = async (req, res, next) => {
+  const productId = req.params.pid;
+  let product;
+  try {
+    product = await Product.findById(productId);
+  } catch (err) {
+    const error = new HttpError("Cant find product", 500);
+    return next(error);
+  }
+
+  if (!product) {
+    const error = new HttpError("Could not find a product by id", 404);
+    return next(error);
+  }
+
+  res.json({ product: product.toObject({ getters: true }) });
+};
+
+const createProduct = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
+    return next(new HttpError("Invalid inputs, please check your data.", 422));
   }
   const { name, description, price } = req.body;
-  const createdProduct = {
+
+  const createdProduct = new Product({
     name,
     description,
     price,
     image,
-  };
-  TEMP_PRODUCT.push(createdProduct);
+  });
+  try {
+    await createdProduct.save();
+  } catch (err) {
+    const error = new HttpError("Failed creating place, please try again", 500);
+    return next(error);
+  }
 
   res.status(201).json({ product: createdProduct });
 };
 
-const updateProduct = (req, res, next) => {
+const updateProductById = async (req, res, next) => {
   const { name, description, price, image } = req.body;
   const productId = req.params.pid;
 
-  const updatedProduct = { ...TEMP_PRODUCT.find((p) => p.id === productId) };
-  const productIndex = TEMP_PRODUCT.findIndex((p) => p.id === productId);
-  updatedProduct.name = name;
-  updatedProduct.description = description;
-  updatedProduct.price = price;
-  updatedProduct.image = image;
+  let product;
+  try {
+    product = await Product.findById(productId);
+  } catch (err) {
+    const error = new HttpError("Could not update product", 500);
+    return next(error);
+  }
+  product.name = name;
+  product.description = description;
+  product.price = price;
+  product.image = image;
 
-  TEMP_PRODUCT[productIndex] = updatedProduct;
+  try {
+    await product.save();
+  } catch (err) {
+    const error = new HttpError("Could not update product", 500);
+    return next(error);
+  }
 
-  res.status(200).json({ product: updatedProduct });
+  res.status(200).json({ product: product.toObject({ getters: true }) });
 };
 
-const deleteProduct = (req, res, next) => {
+const deleteProductById = async (req, res, next) => {
   const productId = req.params.pid;
-  TEMP_PRODUCT = TEMP_PRODUCT.filter((p) => p.id !== productId);
-  res.status(200).json({ message: "Deleted product" });
+
+  let product;
+  try {
+    product = await Product.findById(productId);
+  } catch (err) {
+    const error = new HttpError("Could not delete product", 500);
+    return next(error);
+  }
+
+  try {
+    await product.remove();
+  } catch (err) {
+    return next(
+      new HttpError("Something went wrong, could not delete product", 500)
+    );
+  }
+  res.status(200).json({ message: "Deleted product." });
 };
 
+exports.getAllProducts = getAllProducts();
 exports.getProductById = getProductById();
 exports.createProduct = createProduct();
-exports.updateProduct = updateProduct();
-exports.deleteProduct = deleteProduct();
+exports.updateProductById = updateProductById();
+exports.deleteProductById = deleteProductById();
