@@ -5,9 +5,22 @@ const mongoose = require("mongoose");
 const productsRouters = require("./routes/products");
 const usersRouters = require("./routes/users");
 const HttpError = require("./models/httpError");
+mongoose.set("strictQuery", true);
+const cors = require("cors");
 
 const server = express();
 server.use(bodyParser.json());
+server.use(cors());
+
+server.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+  next();
+});
 
 server.use("/api", productsRouters);
 server.use("/checkout", usersRouters);
